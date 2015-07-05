@@ -1,0 +1,69 @@
+
+public class Percolation {
+	private final int N_;
+	private final byte[] board_;
+	private final byte[] firstRow_;
+	private final byte[] lastRow_;
+	private final WeightedQuickUnionUF union_;
+	
+	private boolean isPercolating_;
+	
+	private static int[] dx = new int[] {-1, 0, 0, 1};
+	private static int[] dy = new int[] {0, -1, 1, 0};
+	
+	public Percolation (int N) {
+		if (N <= 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		N_ = N;
+		isPercolating_ = false;
+		board_ = new byte[N * N];
+		firstRow_ = new byte[N * N];
+		lastRow_  = new byte[N * N];
+		union_ = new WeightedQuickUnionUF(N_ * N_);
+	}
+	
+	public void open (int i, int j) {
+		check(i, j);
+		
+		int idx = getIdx (i, j);
+		
+		if (0 == i) {
+			set (firstRow_, idx);
+		}
+		
+		if (N_ == i) {
+			set (lastRow_, idx);
+		}
+		
+		
+		
+	}
+	
+	public boolean isOpen(int i, int j) {
+		check(i, j);
+		return isSet(board_, getIdx(i, j));
+	}
+	
+	public boolean isFull(int i, int j) {
+		check(i, j);
+		return false;
+	}
+	
+	public boolean percolating() {
+		return isPercolating_;
+	}
+	
+	private void check (int i, int j) {
+		if (i <= 0 || j <= 0 || i > N_ || j > N_) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	private int getIdx (int i, int j) {return (i - 1) * N_ + j - 1;}
+	
+	private static void set (final byte[] v, int idx) {v[idx >> 3] |= 1 << (idx & 7);}
+	private static boolean isSet(final byte[] v, int idx) {return 0 != (v[idx >> 3] & (1 << (idx & 7)));}
+	private static byte get (final byte[] v, int idx) {return isSet(v, idx) ? (byte)1 : (byte)0;}
+}

@@ -1,0 +1,98 @@
+
+
+
+public class Percolation {
+	private final int N_;
+	private byte[] board_;
+	private byte[] isConnectedToTheFirstRow_;
+	private byte[] isConnectedToTheLastRow_;
+	private boolean isPercolating_;
+	
+	private WeightedQuickUnionUF union_;
+	
+	private static final short[] dx = new short[] {-1, 0, 0, 1};
+	private static final short[] dy = new short[] {0, -1, 1, 0};
+	
+	private void checkIdx (int i, int j) {
+		if (i <= 0 || i > N_ || j <= 0 || j > N_) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	private static boolean isSet (final byte[] v, int idx) {
+		return 0 != (v[idx >> 3] & (1 << (idx & 7)));
+	}
+	
+	private static void set(final byte[] v, int idx) {
+		v[idx >> 3] |= 1 << (idx & 7);
+	}
+	
+	private static void copy(final byte[] v, int vIdx, int wIdx) {
+		v[vIdx >> 3] |= v[wIdx >> 3];
+		v[wIdx >> 3] = v[vIdx >> 3];
+	}
+	
+	
+	
+	public Percolation (int N) {
+		if (N <= 0) {
+			throw new IllegalArgumentException("The board size cannot be <= 0");
+		}
+		
+		N_ = N;
+		isPercolating_ = false;
+		board_ = new byte[N_ * N_];
+		isConnectedToTheFirstRow_ = new byte[N_ * N_];
+		isConnectedToTheLastRow_ = new byte[N_ * N_];
+		
+		union_ = new WeightedQuickUnionUF(N_ * N_ + 1);
+	}
+	
+	public void open (int i, int j) {
+		checkIdx(i, j);
+		
+		int idx = (i - 1) * N_ + j;
+		set (board_, idx);
+		
+		if (1 == i) {
+			set (isConnectedToTheFirstRow_, idx);
+		}
+		
+		if (N_ == i) {
+			set (isConnectedToTheLastRow_, idx);
+		}
+		
+		
+		for (int k = 0; k < dx.length; ++k) {
+			int newI = i + dx[k];
+			int newJ = j + dy[k];
+			int newIdx = (newI - 1) * N_ + newJ;
+			
+			if (newI <= 0 || newJ <= 0 || newI > N_ || newJ > N_) continue;
+			
+			if (isSet(board_, newIdx)) {
+				union_.union(idx, newIdx);
+				copy (is)
+			}
+		}
+	}
+	
+	public boolean isOpen (int i, int j) {
+		checkIdx(i, j);
+		
+		return checkIsOpen(i, j);
+	}
+	
+	public boolean isFull (int i, int j) {
+		checkIdx(i, j);
+		return true;
+	}
+	
+	public boolean percolates() {
+		return isPercolating_;
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+}

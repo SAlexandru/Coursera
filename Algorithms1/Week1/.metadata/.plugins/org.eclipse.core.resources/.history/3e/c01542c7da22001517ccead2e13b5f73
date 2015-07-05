@@ -1,0 +1,23 @@
+
+
+public class PercolationStats {
+	private int N_;
+	private int T_;
+	
+	public PercolationStats (int N, int T) {
+		N_ = N;
+		T_ = T;
+	}
+	
+	public double mean() {return 0.0;}
+	
+	public double stddev() {return 0.0;}
+	
+	public double confidenceLo() {return 0.0;}
+	
+	public double configdenceHi() {return 0.0;}
+
+	public static void main(String[] args) {
+		
+	}
+}

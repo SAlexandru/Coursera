@@ -1,0 +1,97 @@
+
+
+
+public class Percolation {
+	private final int N_;
+	private byte[] board_;
+	private byte[] isConnectedToTheFirstRow_;
+	private byte[] isConnectedToTheLastRow_;
+	private boolean isPercolating_;
+	
+	private WeightedQuickUnionUF union_;
+	
+	private static final short[] dx = new short[] {-1, 0, 0, 1};
+	private static final short[] dy = new short[] {0, -1, 1, 0};
+	
+	private void checkIdx (int i, int j) {
+		if (i <= 0 || i > N_ || j <= 0 || j > N_) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	private boolean isSet (final byte[] v, int i, int j) {
+		int idx = (i - 1) * N_ + j;
+		return 0 != (board_[idx >> 3] & (1 << (idx & 7)));
+	}
+	
+	private void set(final byte[] v, int i, int j) {
+		int idx = (i - 1) * N_ + j;
+		board_[idx >> 3] |= 1 << (idx & 7);
+	}
+	
+	
+	public Percolation (int N) {
+		if (N <= 0) {
+			throw new IllegalArgumentException("The board size cannot be <= 0");
+		}
+		
+		N_ = N;
+		isPercolating_ = false;
+		board_ = new byte[N_ * N_];
+		isConnectedToTheFirstRow_ = new byte[N_ * N_];
+		isConnectedToTheLastRow_ = new byte[N_ * N_];
+		
+		union_ = new WeightedQuickUnionUF(N_ * N_ + 1);
+	}
+	
+	public void open (int i, int j) {
+		checkIdx(i, j);
+		
+		int idx = (i - 1) * N_ + j;
+		board_ [idx >> 3] |= 1 << (idx & 7);
+		
+		boolean isFullBlock = false;
+		boolean isLastBlock = false;
+		
+		if (1 == i) {
+			union_.union(0, idx);
+		}
+		
+		isFullBlock = (1 == i) || union_.connected(0, idx);
+		isLastBlock = N_ == i;
+		
+		for (int k = 0; k < dx.length; ++k) {
+			int newI = i + dx[k];
+			int newJ = j + dy[k];
+			int newIdx = (newI - 1) * N_ + newJ;
+			
+			if (newI <= 0 || newJ <= 0 || newI > N_ || newJ > N_) continue;
+			
+			if (checkIsOpen(newI, newJ)) {
+				union_.union(idx, newIdx);
+				isPercolating_ = isPercolating_ ||
+						         (isFullBlock && (N_ == newI)) ||
+						         (isLastBlock && union_.connected(0, newIdx));
+			}
+		}
+	}
+	
+	public boolean isOpen (int i, int j) {
+		checkIdx(i, j);
+		
+		return checkIsOpen(i, j);
+	}
+	
+	public boolean isFull (int i, int j) {
+		checkIdx(i, j);
+		return true;
+	}
+	
+	public boolean percolates() {
+		return isPercolating_;
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+}

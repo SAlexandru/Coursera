@@ -1,0 +1,21 @@
+
+public class Percolation {
+	private final int N_;
+	private final byte[] board_;
+	private final byte[] firstRow_;
+	private final byte[] lastRow_;
+	
+	private boolean isPercolating_;
+	
+	public Percolation (int N) {
+		if (N <= 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		N_ = N;
+		isPercolating_ = false;
+		board_ = new byte[N * N];
+		firstRow_ = new byte[N * N];
+		lastRow_  = new byte[N * N];
+	}
+}

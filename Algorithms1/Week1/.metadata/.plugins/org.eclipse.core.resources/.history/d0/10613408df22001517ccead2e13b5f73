@@ -1,0 +1,45 @@
+
+public class Percolation {
+	private final int N_;
+	private final byte[] board_;
+	private final byte[] firstRow_;
+	private final byte[] lastRow_;
+	
+	private boolean isPercolating_;
+	
+	public Percolation (int N) {
+		if (N <= 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		N_ = N;
+		isPercolating_ = false;
+		board_ = new byte[N * N];
+		firstRow_ = new byte[N * N];
+		lastRow_  = new byte[N * N];
+	}
+	
+	public void open (int i, int j) {
+		check(i, j);
+	}
+	
+	public boolean isOpen(int i, int j) {
+		check(i, j);
+		return false;
+	}
+	
+	public boolean isFull(int i, int j) {
+		check(i, j);
+		return false;
+	}
+	
+	public boolean percolating() {
+		return isPercolating_;
+	}
+	
+	private void check (int i, int j) {
+		if (i <= 0 || j <= 0 || i > N_ || j > N_) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+}
